@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rock Paper Scissors</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #f1f8ff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .game-container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 800px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #007acc;
+      margin-bottom: 20px;
+    }
+
+    .settings-panel {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .score-limit-container label {
+      font-weight: bold;
+    }
+
+    .score-input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 70px;
+      text-align: center;
+    }
+
+    .apply-btn {
+      background: #007acc;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .apply-btn:hover {
+      background: #005fa3;
+    }
+
+    .score-board {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      background: #f0f8ff;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .score {
+      text-align: center;
+    }
+
+    .score h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .score-display {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .game-area {
+      margin-bottom: 20px;
+    }
+
+    .choices {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .choice-btn {
+      font-size: 2.5rem;
+      padding: 20px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    .rock {
+      background: #b2ebf2;
+    }
+
+    .paper {
+      background: #c5cae9;
+    }
+
+    .scissors {
+      background: #f8bbd0;
+    }
+
+    .choice-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .result-display {
+      background: #e3f2fd;
+      padding: 20px;
+      border-radius: 12px;
+      min-height: 100px;
+    }
+
+    .round-result {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .choices-made {
+      font-size: 1.2rem;
+    }
+
+    .win {
+      color: green;
+    }
+
+    .lose {
+      color: red;
+    }
+
+    .tie {
+      color: goldenrod;
+    }
+
+    .game-over {
+      color: purple;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      background: #eeeeee;
+      border: 1px solid #ccc;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .control-btn:hover {
+      background: #dcdcdc;
+    }
+
+    .game-instructions {
+      margin-top: 30px;
+      font-size: 0.95rem;
+      color: #555;
+      background: #f1f1f1;
+      padding: 15px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Rock Paper Scissors</h1>
+
+    <div class="settings-panel">
+      <div class="score-limit-container">
+        <label for="scoreLimit">Score Limit:</label>
+        <input type="number" id="scoreLimit" class="score-input" value="5" min="1" max="99">
+        <button class="apply-btn" onclick="updateScoreLimit()">Apply</button>
+      </div>
+      <div id="limitDisplay"><strong>Playing to:</strong> 5 points</div>
+    </div>
+
+    <div class="score-board">
+      <div class="score">
+        <h3>Player</h3>
+        <div class="score-display">
+          <span id="playerScore">0</span> / <span id="playerLimit">5</span>
+        </div>
+      </div>
+      <div class="score">
+        <h3>Computer</h3>
+        <div class="score-display">
+          <span id="computerScore">0</span> / <span id="computerLimit">5</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-area">
+      <div class="choices">
+        <button class="choice-btn rock" onclick="playGame('rock')">🪨</button>
+        <button class="choice-btn paper" onclick="playGame('paper')">📄</button>
+        <button class="choice-btn scissors" onclick="playGame('scissors')">✂</button>
+      </div>
+      <div class="result-display" id="resultDisplay">
+        <div class="round-result">Ready to play!</div>
+        <div class="choices-made">Choose your move above</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="control-btn" onclick="resetGame()">🔄 Reset</button>
+      <button class="control-btn" onclick="newMatch()">🆕 New Match</button>
+    </div>
+
+    <div class="game-instructions">
+      <strong>Rules:</strong> Rock beats Scissors, Paper beats Rock, Scissors beats Paper.<br>
+      <strong>Controls:</strong> Use R / P / S or click the buttons.<br>
+      First to reach the score limit wins.
+    </div>
+  </div>
+
+  <script>
+    let playerScore = 0;
+    let computerScore = 0;
+    let scoreLimit = 5;
+    let gameActive = true;
+
+    const choices = ['rock', 'paper', 'scissors'];
+    const emojis = { rock: '🪨', paper: '📄', scissors: '✂' };
+    const names = { rock: 'Rock', paper: 'Paper', scissors: 'Scissors' };
+
+    function updateScoreLimit() {
+      const newLimit = parseInt(document.getElementById('scoreLimit').value);
+      if (newLimit >= 1 && newLimit <= 99) {
+        scoreLimit = newLimit;
+        document.getElementById('playerLimit').textContent = scoreLimit;
+        document.getElementById('computerLimit').textContent = scoreLimit;
+        document.getElementById('limitDisplay').textContent = Playing to: ${scoreLimit} points;
+        if (playerScore >= scoreLimit || computerScore >= scoreLimit) {
+          resetGame();
+        }
+      }
+    }
+
+    function playGame(playerChoice) {
+      if (!gameActive) return;
+      const computerChoice = choices[Math.floor(Math.random() * 3)];
+      const result = determineWinner(playerChoice, computerChoice);
+      updateScore(result);
+      displayResult(playerChoice, computerChoice, result);
+      if (playerScore >= scoreLimit || computerScore >= scoreLimit) {
+        endGame();
+      }
+    }
+
+    function determineWinner(player, computer) {
+      if (player === computer) return 'tie';
+      if (
+        (player === 'rock' && computer === 'scissors') ||
+        (player === 'paper' && computer === 'rock') ||
+        (player === 'scissors' && computer === 'paper')
+      ) return 'win';
+      return 'lose';
+    }
+
+    function updateScore(result) {
+      if (result === 'win') {
+        playerScore++;
+        document.getElementById('playerScore').textContent = playerScore;
+      } else if (result === 'lose') {
+        computerScore++;
+        document.getElementById('computerScore').textContent = computerScore;
+      }
+    }
+
+    function displayResult(playerChoice, computerChoice, result) {
+      const resultDisplay = document.getElementById('resultDisplay');
+      let resultText = '';
+      if (result === 'win') resultText = "You Win!";
+      else if (result === 'lose') resultText = "You Lose!";
+      else resultText = "It's a Tie!";
+      resultDisplay.innerHTML = `
+        <div class="round-result ${result}">${resultText}</div>
+        <div class="choices-made">${names[playerChoice]} ${emojis[playerChoice]} vs ${emojis[computerChoice]} ${names[computerChoice]}</div>
+      `;
+    }
+
+    function endGame() {
+      gameActive = false;
+      const resultDisplay = document.getElementById('resultDisplay');
+      let finalText = playerScore > computerScore ? "🎉 You Won the Match!" : "😞 AI Wins the Match!";
+      resultDisplay.innerHTML += <div class="round-result game-over">${finalText}</div>;
+    }
+
+    function resetGame() {
+      playerScore = 0;
+      computerScore = 0;
+      gameActive = true;
+      document.getElementById('playerScore').textContent = 0;
+      document.getElementById('computerScore').textContent = 0;
+      document.getElementById('resultDisplay').innerHTML = `
+        <div class="round-result">Game Reset</div>
+        <div class="choices-made">Make a move to start!</div>
+      `;
+    }
+
+    function newMatch() {
+      resetGame();
+      updateScoreLimit();
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (!gameActive) return;
+      const key = e.key.toLowerCase();
+      if (key === 'r') playGame('rock');
+      if (key === 'p') playGame('paper');
+      if (key === 's') playGame('scissors');
+      if (key === ' ') resetGame();
+    });
+  </script>
+</body>
+</html>
